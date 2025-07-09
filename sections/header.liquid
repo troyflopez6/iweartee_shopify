@@ -1,9 +1,6 @@
 {% assign main_menu_linklist = linklists[section.settings.menu].links %}
-{{ shop.customer_accounts_enabled }}
 
-Hello world
-
-<div class="relative bg-white" x-data="{mobileMenuOpen: false}">
+<div class="relative bg-white" x-data="{mobileMenuOpen: false, searchBarOpen: false }" x-cloak>
   <div class="mx-auto px-4 sm:px-6">
     <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
       <!-- STORE NAME / STORE LOGO -->
@@ -71,13 +68,24 @@ Hello world
       </nav>
 
       <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
+        <button
+          type="button"
+          class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900 cursor-pointer"
+          x-on:click="searchBarOpen  = true"
+        >
+          {% render 'icon-search' %}
+        </button>
         <a href="{{ routes.cart_url }}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
           {% render 'icon-shopping-bag' %}
         </a>
 
         {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <a href="{{ routes.account_logout_url }}" class="text-base text-gray-500 hover:text-gray-900">Logout</a>
+            {% else %}
             <a href="{{ routes.account_login_url }}" class="text-base text-gray-500 hover:text-gray-900">Login</a>
-            <a href="{{ routes.account_register_url }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
+          {% endif %}
+          <a href="{{ routes.account_register_url }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
         {% endif %}
       </div>
     </div>
@@ -157,25 +165,59 @@ Hello world
       </div>
     </div>
   </div>
+  {% comment %} SEARCH BAR {% endcomment %}
+  <div
+    class="w-full absolute top-0 bg-white border"
+    x-show="searchBarOpen"
+  >
+    <button
+      type="button"
+      class="absolute right-0 top-0 mr-5 mt-5 text-gray-500"
+      x-on:click="searchBarOpen = false"
+    >
+      {% render 'icon-close' %}
+    </button>
+    <div class="h-40 flex justify-center items-center">
+      <form
+        action="{{routes.search_url}}"
+        method="get"
+      >
+        <div class="relative text-gray-500 px-10">
+          <input
+            class="w-full border bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
+            type="search"
+            name="q"
+            placeholder="Search"
+          >
+          <button
+            type="submit"
+            class="absolute right-0 top-0 mt-2 mr-2 md:mr-20"
+          >
+            {% render 'icon-search' %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% schema %}
+{
+  "name": "Header",
+  "settings": [
     {
-        "name": "Header",
-        "settings": [
-            {
-                "type": "text",
-                "id": "mobile_menu_title",
-                "label": "Title",
-                "default": "Menu",
-                "info": "Title for mobile menu window"
-            },
-            {
-                "type": "link_list",
-                "id": "menu",
-                "label": "Header Menu",
-                "default": "main-menu",
-            },
-        ],
+      "type": "text",
+      "id": "mobile_menu_title",
+      "label": "Title",
+      "default": "Menu",
+      "info": "Title for mobile menu window"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Header Menu",
+      "default": "main-menu"
     }
+  ]
+}
 {% endschema %}

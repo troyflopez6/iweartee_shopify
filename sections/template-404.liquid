@@ -1,0 +1,51 @@
+<div class="max-w-md">
+  <div class="text-5xl font-bold my-4">
+    {{ section.settings.title }}
+  </div>
+  <div class="my-4">
+    <p class="text-base md:text-xl leading-normal">
+      {{ section.settings.subtext_title }}
+    </p>
+  </div>
+  <div class="my-4">
+    {% if section.settings.link_url == blank %}
+      {% assign shop_url = shop.secure_url | default: shop.secure_url %}
+    {% endif %}
+    <a 
+      href="{{shop_url}}"
+      class="px-4 inline py-2 text-base text-white font-medium shadow bg-green-600 hover:bg-green-800"
+    >
+      {{ section.settings.link_title }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Template 404",
+    "tag": "section",
+    "class": "flex items-center justify-center text-center gap-5 w-full h-screen",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "default": "404",
+        "label": "This is the Title for the 404 page"
+      }, {
+        "type": "text",
+        "id": "subtext_title",
+        "default": "The page that you're looking for is not found",
+        "label": "Subtext of 404 page"
+      }, {
+        "type": "text",
+        "id": "link_title",
+        "default": "Back to homepage",
+        "label": "Link title"
+      }, {
+        "type": "url",
+        "id": "link_url",
+        "label": "url of the link"
+      }
+    ],
+  }
+{% endschema %}
